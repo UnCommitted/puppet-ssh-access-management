@@ -1,0 +1,5 @@
+*.swp
+/puppet.conf
+/routes.yaml
+/puppetdb.conf
+/hieradata
