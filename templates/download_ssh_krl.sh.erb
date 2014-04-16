@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+# This script downloads the KRL from a given website into a designated
+# file to make sure that revoked ssh certificates are no longer
+# allowed access
+
+# This needs to be a full path name
+KRL_LOCAL_FILE="<%= krl_file_location -%>"
+KRL_REMOTE_URL="<%= krl_url -%>"
+
+# Retrieve the KRL file.
+wget -O "${KRL_LOCAL_FILE}" "${KRL_REMOTE_URL}"
+
+chown root.root "${KRL_LOCAL_FILE}"
+chmod 0644 "${KRL_LOCAL_FILE}"
+
