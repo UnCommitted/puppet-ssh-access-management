@@ -112,7 +112,7 @@ class ssh_access_management::ssh_certificate_config (
   # the SSH KRL.
   cron { 'update_ssh_krl':
     ensure  => 'present',
-    command => '/usr/local/sbin/download_ssh_krl.sh',
+    command => '/usr/local/bin/download_ssh_krl.sh',
     user    => 'root',
     hour    => '*/6',
     require => File['/usr/local/bin/download_ssh_krl.sh'];
