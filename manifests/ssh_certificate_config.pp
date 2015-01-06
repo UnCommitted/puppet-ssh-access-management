@@ -9,8 +9,9 @@ class ssh_access_management::ssh_certificate_config (
   $allow_user_authorized_keys = true,
 
   # Default options for the KRL retrieval script
-  $krl_file_location = '/etc/ssh/revoked_keys',
-  $krl_url
+  $krl_repo      = 'git@github.com:eResearchSA/ssh-krl.git',
+  $krl_clone_dir = '/etc/ssh-krl',
+  $krl_file      = 'revoked_keys'
 ) {
 
   if $allow_user_authorized_keys {
@@ -54,8 +55,7 @@ class ssh_access_management::ssh_certificate_config (
     # The following needs to be copied from a public source.
     'RevokedKeys':
       ensure => 'present',
-      value  => '/etc/ssh/revoked_keys'; 
-
+      value  => "${krl_clone_dir}/${krl_file}"; 
   }
 
   # Create some of the SSH configuration files.
@@ -111,10 +111,10 @@ class ssh_access_management::ssh_certificate_config (
   # The following cron job will run every hour to update
   # the SSH KRL.
   cron { 'update_ssh_krl':
-    ensure  => 'absent',
+    ensure  => 'present',
     command => '/usr/local/sbin/download_ssh_krl.sh',
     user    => 'root',
-    hour    => '*',
+    hour    => '*/6',
     require => File['/usr/local/bin/download_ssh_krl.sh'];
   }
 
