@@ -9,7 +9,7 @@ class ssh_access_management::ssh_certificate_config (
   $allow_user_authorized_keys = true,
 
   # Default options for the KRL retrieval script
-  $krl_repo      = 'git@github.com:eResearchSA/ssh-krl.git',
+  $krl_repo      = 'https://github.com/eResearchSA/ssh-krl.git',
   $krl_clone_dir = '/etc/ssh-krl',
   $krl_file      = 'revoked_keys'
 ) {
