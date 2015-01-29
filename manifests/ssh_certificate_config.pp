@@ -97,9 +97,8 @@ class ssh_access_management::ssh_certificate_config (
     source => "puppet:///modules/${module_name}/ssh_config_certs"
   }
 
+  # Script to download and install the ssh_krl file.
   file {
-
-    # Regularly update the Key Revokation List
     '/usr/local/bin/download_ssh_krl.sh':
       ensure  => 'present',
       owner   => 'root',
@@ -108,8 +107,17 @@ class ssh_access_management::ssh_certificate_config (
       content => template("${module_name}/download_ssh_krl.sh.erb");
   }
 
+  # Execute the download script on installation to avoid delays on being able
+  # to log in.
+  exec { 'download_krl_on_installation':
+    command              => '/usr/local/bin/download_ssh_krl.sh',
+    subscribe            => File['/usr/local/bin/download_ssh_krl.sh'],
+    refreshonly          => true
+  }
+
   # The following cron job will run every hour to update
   # the SSH KRL.
+  # Regularly update the Key Revokation List
   cron { 'update_ssh_krl':
     ensure  => 'present',
     command => '/usr/local/bin/download_ssh_krl.sh',
@@ -119,3 +127,5 @@ class ssh_access_management::ssh_certificate_config (
   }
 
 }
+
+# vim: set shiftwidth=2 softtabstop=2 textwidth=0 wrapmargin=0 syntax=ruby:
